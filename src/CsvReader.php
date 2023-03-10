@@ -21,16 +21,17 @@ class CsvReader
      */
     private $delimiter;
     /**
-     * @var string
+     * @var resource|false
      */
     private $file;
 
     /**
-     * @param  string  $fileName
+     * @param  string  $filePath
      * @param  string  $delimiter
      * @param  bool  $header
      *
-     * @throws Exception
+     * @throws InvalidArgumentException
+     * @throws UnexpectedValueException
      */
     public function __construct(
         string $filePath,
