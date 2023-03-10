@@ -108,4 +108,15 @@ final class CsvReaderTest extends TestCase
         // テストが通ればOK
         $this->expectNotToPerformAssertions();
     }
+
+    // /**
+    //  * @test
+    //  *
+    //  * @todo やり方が不明なので保留
+    //  */
+    // public function csvファイルが開けなければ例外()
+    // {
+    //     $this->expectException(UnexpectedValueException::class);
+    //     $this->expectExceptionMessage('to open file:');
+    // }
 }
