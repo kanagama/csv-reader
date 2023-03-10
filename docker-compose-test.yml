@@ -8,6 +8,7 @@ services:
     volumes:
       - .:/var/www/html
     # restart: unless-stopped
+    init: true
     command: vendor/bin/phpunit tests/Unit/CsvReaderTest.php
 
   php80_csvreader:
@@ -18,6 +19,7 @@ services:
     volumes:
       - .:/var/www/html
     # restart: unless-stopped
+    init: true
     command: vendor/bin/phpunit tests/Unit/CsvReaderTest.php
     depends_on:
       - php74_csvreader
@@ -30,6 +32,7 @@ services:
     volumes:
       - .:/var/www/html
     # restart: unless-stopped
+    init: true
     command: vendor/bin/phpunit tests/Unit/CsvReaderTest.php
     depends_on:
       - php80_csvreader
@@ -42,6 +45,7 @@ services:
     volumes:
       - .:/var/www/html
     # restart: unless-stopped
+    init: true
     command: vendor/bin/phpunit tests/Unit/CsvReaderTest.php
     depends_on:
       - php81_csvreader

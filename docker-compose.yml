@@ -9,6 +9,7 @@ services:
     volumes:
       - .:/var/www/html
     restart: unless-stopped
+    init: true
     command: >
       bash -c '
         composer update;
