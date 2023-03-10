@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  #
+  php74_csvreader_development:
+    container_name: php74_csvreader_development
+    build:
+      context: .
+      dockerfile: ./.docker/PHP74_Dockerfile
+    volumes:
+      - .:/var/www/html
+    restart: unless-stopped
+    command: >
+      bash -c '
+        composer update;
+        tail -f /dev/null;
+      '

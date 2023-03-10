@@ -1,0 +1,47 @@
+version: "3.8"
+services:
+  php74_csvreader:
+    container_name: php74_csvreader
+    build:
+      context: .
+      dockerfile: ./.docker/PHP74_Dockerfile
+    volumes:
+      - .:/var/www/html
+    # restart: unless-stopped
+    command: vendor/bin/phpunit tests/Unit/CsvReaderTest.php
+
+  php80_csvreader:
+    container_name: php80_csvreader
+    build:
+      context: .
+      dockerfile: ./.docker/PHP80_Dockerfile
+    volumes:
+      - .:/var/www/html
+    # restart: unless-stopped
+    command: vendor/bin/phpunit tests/Unit/CsvReaderTest.php
+    depends_on:
+      - php74_csvreader
+
+  php81_csvreader:
+    container_name: php81_csvreader
+    build:
+      context: .
+      dockerfile: ./.docker/PHP81_Dockerfile
+    volumes:
+      - .:/var/www/html
+    # restart: unless-stopped
+    command: vendor/bin/phpunit tests/Unit/CsvReaderTest.php
+    depends_on:
+      - php80_csvreader
+
+  php82_csvreader:
+    container_name: php82_csvreader
+    build:
+      context: .
+      dockerfile: ./.docker/PHP82_Dockerfile
+    volumes:
+      - .:/var/www/html
+    # restart: unless-stopped
+    command: vendor/bin/phpunit tests/Unit/CsvReaderTest.php
+    depends_on:
+      - php81_csvreader
