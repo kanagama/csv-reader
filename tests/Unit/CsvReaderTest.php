@@ -13,11 +13,6 @@ use UnexpectedValueException;
 final class CsvReaderTest extends TestCase
 {
     /**
-     * @var string
-     */
-    private const CSV_PATH = __DIR__ . '/../File/KEN_ALL.CSV';
-
-    /**
      * @var CsvReader
      */
     private $csvReader;
@@ -28,17 +23,36 @@ final class CsvReaderTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+    }
 
-        $this->csvReader = new CsvReader(self::CSV_PATH);
+    /**
+     * @return array
+     */
+    public function csvReaderProvider(): array
+    {
+        return [
+            'SJIS' => [
+                'path' => __DIR__ . '/../File/KEN_ALL.CSV',
+            ],
+            'UTF8_BOM' => [
+                'path' => __DIR__ . '/../File/KEN_ALL_UTF8_BOM.CSV',
+            ],
+        ];
     }
 
     /**
      * @test
+     * @dataProvider csvReaderProvider
+     *
+     * @param  string  $path
      */
-    public function readで全ての行が読み込める()
+    public function readで全ての行が読み込める(string $path)
     {
-        $lineCount = 0;
-        $file = fopen(self::CSV_PATH, "r");
+        $this->csvReader = new CsvReader($path, ',', false);
+
+        // header も読むため
+        $lineCount = 1;
+        $file = fopen($path, "r");
         while (!feof($file)) {
             fgetcsv($file);
             if (!feof($file)) {
@@ -60,9 +74,14 @@ final class CsvReaderTest extends TestCase
 
     /**
      * @test
+     * @dataProvider csvReaderProvider
+     *
+     * @param  string  $path
      */
-    public function read行データが正常に読み込める()
+    public function read行データが正常に読み込める(string $path)
     {
+        $this->csvReader = new CsvReader($path, ',', false);
+
         $iterator = $this->csvReader->readLine();
         foreach ($iterator as $line) {
             foreach ($line as $value) {
@@ -102,9 +121,14 @@ final class CsvReaderTest extends TestCase
 
     /**
      * @test
+     * @dataProvider csvReaderProvider
+     *
+     * @param  string  $path
      */
-    public function 拡張子がCSV（※小文字でない）でも問題ない()
+    public function 拡張子がCSV（※小文字でない）でも問題ない(string $path)
     {
+        $this->csvReader = new CsvReader($path);
+
         // テストが通ればOK
         $this->expectNotToPerformAssertions();
     }
