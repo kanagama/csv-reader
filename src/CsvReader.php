@@ -13,6 +13,11 @@ use UnexpectedValueException;
 class CsvReader
 {
     /**
+     * @var bool
+     */
+    private $header;
+
+    /**
      * @var string
      */
     private $filePath;
@@ -45,6 +50,7 @@ class CsvReader
             throw new InvalidArgumentException("not Csv File: " . $filePath);
         }
 
+        $this->header = $header;
         $this->filePath = $filePath;
         $this->delimiter = $delimiter;
 
@@ -54,7 +60,7 @@ class CsvReader
         }
 
         // header は飛ばす
-        if ($header) {
+        if ($this->header) {
             fgetcsv($this->file, 0, $this->delimiter);
         }
     }
@@ -87,6 +93,18 @@ class CsvReader
                 $cellEncoding = mb_detect_encoding($cell, "SJIS-win,UTF-8,eucJP-win,SJIS,EUC-JP,ASCII");
                 if ($cellEncoding === 'SJIS-win') {
                     $row[$key] = mb_convert_encoding($cell, 'UTF-8', 'SJIS-win');
+                    continue;
+                }
+
+                // UTFの場合はBOMがあるかも
+                if ($cellEncoding === 'UTF-8') {
+                    if ($this->header || $key > 0) {
+                        continue;
+                    }
+                    $this->header = true;
+
+                    $bom = pack('H*', 'EFBBBF');
+                    $row[0] = preg_replace("/^$bom/", '', $row[0]);
                 }
             }
 
