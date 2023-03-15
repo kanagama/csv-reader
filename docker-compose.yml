@@ -5,7 +5,7 @@ services:
     container_name: php74_csvreader_development
     build:
       context: .
-      dockerfile: ./.docker/PHP74_Dockerfile
+      dockerfile: ./.docker/Dockerfile/PHP74_Dockerfile
     volumes:
       - .:/var/www/html
     restart: unless-stopped

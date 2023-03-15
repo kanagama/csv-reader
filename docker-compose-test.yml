@@ -4,23 +4,23 @@ services:
     container_name: php74_csvreader
     build:
       context: .
-      dockerfile: ./.docker/PHP74_Dockerfile
+      dockerfile: ./.docker/dockerfile/PHP74_Dockerfile
     volumes:
       - .:/var/www/html
     # restart: unless-stopped
     init: true
-    command: vendor/bin/phpunit tests/Unit/CsvReaderTest.php
+    command: ./.docker/command/test.sh
 
   php80_csvreader:
     container_name: php80_csvreader
     build:
       context: .
-      dockerfile: ./.docker/PHP80_Dockerfile
+      dockerfile: ./.docker/dockerfile/PHP80_Dockerfile
     volumes:
       - .:/var/www/html
     # restart: unless-stopped
     init: true
-    command: vendor/bin/phpunit tests/Unit/CsvReaderTest.php
+    command: ./.docker/command/test.sh
     depends_on:
       - php74_csvreader
 
@@ -28,12 +28,12 @@ services:
     container_name: php81_csvreader
     build:
       context: .
-      dockerfile: ./.docker/PHP81_Dockerfile
+      dockerfile: ./.docker/dockerfile/PHP81_Dockerfile
     volumes:
       - .:/var/www/html
     # restart: unless-stopped
     init: true
-    command: vendor/bin/phpunit tests/Unit/CsvReaderTest.php
+    command: ./.docker/command/test.sh
     depends_on:
       - php80_csvreader
 
@@ -41,11 +41,11 @@ services:
     container_name: php82_csvreader
     build:
       context: .
-      dockerfile: ./.docker/PHP82_Dockerfile
+      dockerfile: ./.docker/dockerfile/PHP82_Dockerfile
     volumes:
       - .:/var/www/html
     # restart: unless-stopped
     init: true
-    command: vendor/bin/phpunit tests/Unit/CsvReaderTest.php
+    command: ./.docker/command/test.sh
     depends_on:
       - php81_csvreader
