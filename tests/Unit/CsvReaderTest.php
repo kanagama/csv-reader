@@ -48,7 +48,7 @@ final class CsvReaderTest extends TestCase
      */
     public function readで全ての行が読み込める(string $path)
     {
-        $this->csvReader = new CsvReader($path, ',', false);
+        $this->csvReader = new CsvReader($path, false, ',');
 
         // header も読むため
         $lineCount = 1;
@@ -80,7 +80,7 @@ final class CsvReaderTest extends TestCase
      */
     public function read行データが正常に読み込める(string $path)
     {
-        $this->csvReader = new CsvReader($path, ',', false);
+        $this->csvReader = new CsvReader($path, false, ',');
 
         $iterator = $this->csvReader->readLine();
         foreach ($iterator as $line) {
