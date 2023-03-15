@@ -13,14 +13,15 @@ use UnexpectedValueException;
 class CsvReader
 {
     /**
+     * @var string
+     */
+    private $filePath;
+
+    /**
      * @var bool
      */
     private $header;
 
-    /**
-     * @var string
-     */
-    private $filePath;
     /**
      * @var string
      */
@@ -32,16 +33,16 @@ class CsvReader
 
     /**
      * @param  string  $filePath
-     * @param  string  $delimiter
      * @param  bool  $header
+     * @param  string  $delimiter
      *
      * @throws InvalidArgumentException
      * @throws UnexpectedValueException
      */
     public function __construct(
         string $filePath,
-        string $delimiter = ',',
-        bool $header = true
+        bool $header = true,
+        string $delimiter = ','
     ) {
         if (!file_exists($filePath)) {
             throw new InvalidArgumentException("File not found: " . $filePath);
@@ -50,8 +51,8 @@ class CsvReader
             throw new InvalidArgumentException("not Csv File: " . $filePath);
         }
 
-        $this->header = $header;
         $this->filePath = $filePath;
+        $this->header = $header;
         $this->delimiter = $delimiter;
 
         $this->file = fopen($this->filePath, "r");
@@ -78,7 +79,7 @@ class CsvReader
     /**
      * 1行ずつ読み込む
      *
-     * @return array|false|null
+     * @return Generator|array|false
      */
     public function readLine()
     {
@@ -90,25 +91,36 @@ class CsvReader
 
             // 文字コード変換
             foreach ($row as $key => $cell) {
-                $cellEncoding = mb_detect_encoding($cell, "SJIS-win,UTF-8,eucJP-win,SJIS,EUC-JP,ASCII");
-                if ($cellEncoding === 'SJIS-win') {
-                    $row[$key] = mb_convert_encoding($cell, 'UTF-8', 'SJIS-win');
-                    continue;
-                }
-
-                // UTFの場合はBOMがあるかも
-                if ($cellEncoding === 'UTF-8') {
-                    if ($this->header || $key > 0) {
-                        continue;
-                    }
-                    $this->header = true;
-
-                    $bom = pack('H*', 'EFBBBF');
-                    $row[0] = preg_replace("/^$bom/", '', $row[0]);
-                }
+                $row[$key] = $this->convertCellEncoding($cell, $key);
             }
 
             yield $row;
         }
+    }
+
+    /**
+     * 文字コードが SJIS-win であれば utf8 に変換する
+     *
+     * @param string $cell
+     * @param int $key
+     *
+     * @return string
+     */
+    private function convertCellEncoding(string $cell, int $key): string
+    {
+        $cellEncoding = mb_detect_encoding($cell, "SJIS-win,UTF-8,eucJP-win,SJIS,EUC-JP,ASCII");
+        if ($cellEncoding === 'SJIS-win') {
+            return mb_convert_encoding($cell, 'UTF-8', 'SJIS-win');
+        }
+
+        // UTFの場合はBOMがあるかも
+        if ($cellEncoding !== 'UTF-8' || $this->header || $key > 0) {
+            return $cell;
+        }
+
+        $this->header = true;
+
+        $bom = pack('H*', 'EFBBBF');
+        return preg_replace("/^$bom/", '', $cell);
     }
 }
