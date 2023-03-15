@@ -2,6 +2,7 @@
 
 namespace Kanagama\CsvReader;
 
+use Generator;
 use InvalidArgumentException;
 use UnexpectedValueException;
 
@@ -79,7 +80,7 @@ class CsvReader
     /**
      * 1行ずつ読み込む
      *
-     * @return Generator|array|false
+     * @return Generator|array|false|null
      */
     public function readLine()
     {
