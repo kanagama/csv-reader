@@ -7,8 +7,6 @@ use InvalidArgumentException;
 use UnexpectedValueException;
 
 /**
- * @method array readLine()
- *
  * @author k-nagama <k.nagama0632@gmail.com>
  */
 class CsvReader

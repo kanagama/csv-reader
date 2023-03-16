@@ -1,6 +1,5 @@
 version: "3.8"
 services:
-  #
   php74_csvreader_development:
     container_name: php74_csvreader_development
     build:
@@ -12,6 +11,6 @@ services:
     init: true
     command: >
       bash -c '
-        composer update;
+        composer install;
         tail -f /dev/null;
       '
